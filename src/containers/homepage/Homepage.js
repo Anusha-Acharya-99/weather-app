@@ -1,10 +1,7 @@
 import React from 'react';
-//import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Image from '../../assets/background.svg';
-//import Logo from '../../assets/logo_web.png';
-//import Search from '../../assets/icon_search_white.svg';
-import Favourite from '../../assets/icon_favourite_Active.svg';
+import Favourite from '../../assets/icon_favourite.svg';
 import MostlySunny from '../../assets/icon_mostly_sunny.svg';
 import TempIcon from '../../assets/icon_temperature_info.svg';
 import PrecipitationIcon from '../../assets/icon_precipitation_info.svg';
@@ -200,19 +197,6 @@ background-size: cover;
 
   .icons-list{
       text-align: left;
-  }
-
-  .radio{
-      display: none;
-      :checked + label{
-         height: 15px;
-  color: #FFD639;
-  font-family: Roboto;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 15px
-      }
   }
 `;
 

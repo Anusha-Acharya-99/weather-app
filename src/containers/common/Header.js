@@ -121,6 +121,19 @@ const Div = styled.div`
 a{
       text-decoration: none;
   }
+
+  .radio{
+      display: none;
+      :checked + label{
+         height: 15px;
+  color: #FFD639;
+  font-family: Roboto;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 15px
+      }
+  }
 `;
 
 
