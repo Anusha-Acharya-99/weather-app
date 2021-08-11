@@ -7,54 +7,51 @@ import NothingIcon from '../../assets/icon_nothing.svg';
 import MostlySunny from '../../assets/icon_mostly_sunny.svg';
 import FavActive from '../../assets/icon_favourite_Active.svg';
 
-const FavouriteList = [
+const RecentSearchList = [
     { location: 'Udupi, Karnataka', icon: MostlySunny, temp: '31', text: 'Mostly Sunny', favicon: FavActive },
 {location: 'Bangalore, Karnataka', icon: MostlySunny, temp: '29', text: 'Rain', favicon: FavActive}];
 
-const Favourite = () => {
-
+const RecentSearch = () => {
     const handleRemove = () => {
-        document.getElementById('hide-list').className = 'remove-favourites';
-        document.getElementById('NO').className = 'unclick-res';
-        document.getElementById('YES').className = 'unclick-res';
+        document.getElementById('hide-recent-list').className = 'remove-recent-search';
+        document.getElementById('no').className = 'unclick-rec-res';
+        document.getElementById('yes').className = 'unclick-rec-res';
     }
 
     const handleSelect = (e) => {
         console.log(e.target.id);
-        document.getElementById(e.target.id).className = 'click-res';
-        setTimeout(() => document.getElementById('hide-list').className = 'hidden', 1000);
+        document.getElementById(e.target.id).className = 'click-rec-res';
+        setTimeout(() => document.getElementById('hide-recent-list').className = 'hidden-list', 1000);
     }
-
     return (
-         <Wrapper>
+        <Wrapper>
             <div className="container">
                 <Header />
                 {
-                    FavouriteList.length === 0 ?
-                        <div className="no-favourites">
-                            <img src={NothingIcon} className="icon-nothing"/>
-                            <div className="no-favourites-msg">No Favourites added</div>
+                    RecentSearchList.length === 0 ?
+                        <div className="no-recent-search">
+                            <img src={NothingIcon} className="icon-nothing" />
+                            <div className="no-recent-search-msg">No Recent Search</div>
                         </div>
                         :
                         <div>
-                        <div className= "first-row">
-                            <div className="list-length">{FavouriteList.length} City added as favourite</div>
-                            <div className="remove" onClick = {handleRemove }>Remove all</div>
+                            <div className="first-row">
+                                <div className="list-length">You recently searched for</div>
+                                <div className="clear" onClick={handleRemove}>Clear all</div>
                             </div>
-                            <Table list={ FavouriteList}/>
+                            <Table list={RecentSearchList} />
                         </div>
                 }
-                <div className="hidden" id="hide-list">
-                    <div className="remove-confirm">Are you sure want to remove all the favourites?</div>
+                <div className="hidden-list" id="hide-recent-list">
+                    <div className="clear-confirm">Are you sure want to clear recent searches?</div>
                     <div className="yes-no">
-                        <div className="unclick-res" onClick={handleSelect} id="NO">NO</div>
-                        <div className="unclick-res" onClick={handleSelect} id="YES">YES</div>
+                        <div className="unclick-rec-res" onClick={handleSelect} id="no">NO</div>
+                        <div className="unclick-rec-res" onClick={handleSelect} id="yes">YES</div>
                     </div>
                 </div>
             </div>
         </Wrapper>
-    )
-}
+    )}
 
 const Wrapper = styled.div`
 background-image: url(${Image});
@@ -67,12 +64,12 @@ background-size: cover;
     margin-right: 120px;
 }
 
-.no-favourites{
+.no-recent-search{
     text-align: center;
     margin-top: 176px;
 }
 
-.no-favourites-msg{
+.no-recent-search-msg{
     margin-top: 25px;
     height: 21px;
   color: #FFFFFF;
@@ -96,7 +93,7 @@ background-size: cover;
   line-height: 15px;
 }
 
-.remove-favourites{
+.remove-recent-search{
     height: 210px;
   width: 458px;
   border-radius: 2px;
@@ -109,7 +106,7 @@ background-size: cover;
   box-shadow: 0 0 0 100vmax rgba(0,0,0,.5);
 }
 
-.remove-confirm{
+.clear-confirm{
     height: 18px;
   color: #000000;
   font-family: Roboto;
@@ -125,7 +122,7 @@ background-size: cover;
     justify-content: center;
 }
 
-.click-res{
+.click-rec-res{
     box-sizing: border-box;
   border-radius: 2px;
   width: 106px;
@@ -141,7 +138,7 @@ background-size: cover;
   text-align: center;
 }
 
-.unclick-res{
+.unclick-rec-res{
     box-sizing: border-box;
 height: 18px;
   color: #000000;
@@ -155,9 +152,9 @@ height: 18px;
   text-align: center;
 }
 
-.hidden{
+.hidden-list{
     display: none;
 }
 `;
 
-export default Favourite;
+export default RecentSearch;
