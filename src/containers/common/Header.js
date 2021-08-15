@@ -4,13 +4,17 @@ import styled from 'styled-components';
 import Logo from '../../assets/logo_web.png';
 import Search from '../../assets/icon_search_white.svg';
 
-const Header = () => {
+const Header = ({ handleChange }) => {
+    const handleSearch = (e) => {
+        handleChange(e.target.value);
+    }
+
     return (
             <Div>
                 <div className="header">
                     <img src={Logo} className="Logo" />
                     <div className="search-container">
-                        <input type="text" className="search-bar" placeholder="Search city" />
+                    <input type="search" className="search-bar" placeholder="Search city" onChange={handleSearch}/>
                         <img className="search-icon" src={Search} alt="search"></img>
                     </div>
                 </div>
@@ -59,7 +63,7 @@ const Div = styled.div`
 .search-bar{
      box-sizing: border-box;
   height: 45px;
-  width: 419px;
+  width: 399px;
   border: none;
   background: transparent;
   padding-left: 14px;
@@ -75,8 +79,13 @@ const Div = styled.div`
 }
 }
 
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
+
 .search-icon{
     vertical-align: middle;
+    padding: 10px;
 }
 
 .navbar{

@@ -1,17 +1,31 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import Header from '../common/Header';
 import Table from '../common/Table';
+import { ApiKey } from '../../services/ApiKey';
 import Image from '../../assets/background.svg';
 import NothingIcon from '../../assets/icon_nothing.svg';
 import MostlySunny from '../../assets/icon_mostly_sunny.svg';
 import FavActive from '../../assets/icon_favourite_Active.svg';
+import axios from 'axios';
 
-const FavouriteList = [
-    { location: 'Udupi, Karnataka', icon: MostlySunny, temp: '31', text: 'Mostly Sunny', favicon: FavActive },
-{location: 'Bangalore, Karnataka', icon: MostlySunny, temp: '29', text: 'Rain', favicon: FavActive}];
+// const FavouriteList = [
+//     { location: 'Udupi, Karnataka', icon: MostlySunny, temp: '31', text: 'Mostly Sunny', favicon: FavActive },
+// {location: 'Bangalore, Karnataka', icon: MostlySunny, temp: '29', text: 'Rain', favicon: FavActive}];
 
 const Favourite = () => {
+    const FavouriteList = useRef([]);
+    const favList = (localStorage.getItem('Favourites')).split(',');
+
+        favList.map((fav, index) => {
+            const getItem = async () => {
+            const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${fav}&appid=${ApiKey}`);
+            FavouriteList.current = [...FavouriteList.current,response.data];
+            }
+        getItem();
+    })
+
+    console.log(FavouriteList);
 
     const handleRemove = () => {
         document.getElementById('hide-list').className = 'remove-favourites';
@@ -30,7 +44,7 @@ const Favourite = () => {
             <div className="container">
                 <Header />
                 {
-                    FavouriteList.length === 0 ?
+                    FavouriteList.current.length === 0 ?
                         <div className="no-favourites">
                             <img src={NothingIcon} className="icon-nothing"/>
                             <div className="no-favourites-msg">No Favourites added</div>
@@ -38,10 +52,10 @@ const Favourite = () => {
                         :
                         <div>
                         <div className= "first-row">
-                            <div className="list-length">{FavouriteList.length} City added as favourite</div>
+                            <div className="list-length">{FavouriteList.current.length} City added as favourite</div>
                             <div className="remove" onClick = {handleRemove }>Remove all</div>
                             </div>
-                            <Table list={ FavouriteList}/>
+                            <Table list={ FavouriteList.current}/>
                         </div>
                 }
                 <div className="hidden" id="hide-list">

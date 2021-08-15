@@ -6,13 +6,13 @@ const Table = ({list}) => {
         <Wrapper>
             {list.map((fav, index) => {
                 return (<span className="fav-details-list">
-                    <span className="fav-location">{fav.location}</span>
+                    <span className="fav-location">{fav.name}</span>
                     <img src={fav.icon} className="fav-icon" />
                     <span className="temperature">
-                        <span className="fav-temp">{fav.temp}</span>
+                        <span className="fav-temp">{fav.main.temp}</span>
                         <span className="unit">⁰C</span>
                     </span>
-                    <span className="fav-text">{fav.text}</span>
+                    <span className="fav-text">{fav.weather.description}</span>
                     <img src={fav.favicon} className="fav-favicon" />
                 </span>)
             })}
