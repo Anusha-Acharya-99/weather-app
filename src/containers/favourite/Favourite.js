@@ -1,31 +1,30 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Header from '../common/Header';
 import Table from '../common/Table';
 import { ApiKey } from '../../services/ApiKey';
 import Image from '../../assets/background.svg';
 import NothingIcon from '../../assets/icon_nothing.svg';
-import MostlySunny from '../../assets/icon_mostly_sunny.svg';
-import FavActive from '../../assets/icon_favourite_Active.svg';
 import axios from 'axios';
-
-// const FavouriteList = [
-//     { location: 'Udupi, Karnataka', icon: MostlySunny, temp: '31', text: 'Mostly Sunny', favicon: FavActive },
-// {location: 'Bangalore, Karnataka', icon: MostlySunny, temp: '29', text: 'Rain', favicon: FavActive}];
 
 const Favourite = () => {
     const FavouriteList = useRef([]);
-    const favList = (localStorage.getItem('Favourites')).split(',');
+    //const [rerender, setRerender] = useState(false);
+    const [favList, setFavlist] = useState((localStorage.getItem('Favourites'))?.split(','));
 
+//     useEffect(()=>{
+//     setRerender(!rerender);
+// }, []);
+
+    if (favList) {
         favList.map((fav, index) => {
             const getItem = async () => {
-            const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${fav}&appid=${ApiKey}`);
-            FavouriteList.current = [...FavouriteList.current,response.data];
+                const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${fav}&units=metric&appid=${ApiKey}`);
+                FavouriteList.current = [...FavouriteList.current, response.data];
             }
-        getItem();
-    })
-
-    console.log(FavouriteList);
+            getItem();
+        })
+    }
 
     const handleRemove = () => {
         document.getElementById('hide-list').className = 'remove-favourites';
@@ -34,8 +33,11 @@ const Favourite = () => {
     }
 
     const handleSelect = (e) => {
-        console.log(e.target.id);
         document.getElementById(e.target.id).className = 'click-res';
+        if (e.target.id === "YES") {
+            localStorage.removeItem('Favourites');
+            setFavlist([]);
+        }
         setTimeout(() => document.getElementById('hide-list').className = 'hidden', 1000);
     }
 
@@ -75,6 +77,7 @@ background-image: url(${Image});
 height: 100vh;
 width: 100wh;
 background-size: cover;
+overflow:scroll;
 
 .container{
     margin-left: 120px;

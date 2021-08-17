@@ -7,13 +7,19 @@ import Image from '../../assets/background.svg';
 import NothingIcon from '../../assets/icon_nothing.svg';
 import Favourite from '../../assets/icon_favourite.svg';
 import FavouriteActive from '../../assets/icon_favourite_Active.svg';
-import MostlySunny from '../../assets/icon_mostly_sunny.svg';
 import TempIcon from '../../assets/icon_temperature_info.svg';
 import PrecipitationIcon from '../../assets/icon_precipitation_info.svg';
 import HumidityIcon from '../../assets/icon_humidity_info.svg';
 import WindIcon from '../../assets/icon_wind_info.svg';
 import VisibilityIcon from '../../assets/icon_visibility_info.svg';
 import Header from '../common/Header';
+import Sunny from '../../assets/icon_mostly_sunny.svg';
+import Rain from '../../assets/icon_rain_big.svg';
+import MostlyCloudy from '../../assets/icon_mostly_cloudy_big.svg';
+import PartlyCloudy from '../../assets/icon_partially_cloudy_big.svg';
+import Thunderstorm from '../../assets/icon_thunderstorm_big.svg';
+import Clear from '../../assets/icon_clear_night.svg';
+
 
 const Homepage = () => {
     const [location, setLocation] = useState('')
@@ -23,30 +29,56 @@ const Homepage = () => {
     const [long, setLong] = useState(0);
     const [Fav, setFav] = useState([]);
     const [favIcon, setFavIcon] = useState();
-    const [localList, setLocalList] = useState(localStorage.getItem('Favourites').split(','));
+    const [localList, setLocalList] = useState(localStorage.getItem('Favourites')?.split(','));
+    const [icon, setIcon] = useState();
     var loc;
+
 
     const currentLocation = (position) => {
         setLat(position.coords.latitude);
         setLong(position.coords.longitude);
     }
 
-    console.log(favIcon);
-
     const getDetails = async () => {
         try {
             await window.navigator.geolocation.getCurrentPosition(currentLocation);
             const response = location === '' ? await axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=${unit}&appid=${ApiKey}`) : await axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${location}&units=${unit}&appid=${ApiKey}`).catch((error) => console.log(error));
             (response === undefined) ? setCity('error') : setCity(response.data);
+            console.log(response.data);
             loc = response.data.name;
-           
+            const id = response.data.weather[0].id;
+            console.log(id);
+            if (id >= 200 && id <= 232) {
+                setIcon(Thunderstorm);
+                console.log('Thunder');
+            }
+            else if (id >= 300 && id <= 531) {
+                setIcon(Rain);
+                console.log('Rain');
+            }
+            else if (id === 800) {
+                setIcon(Clear);
+                console.log('Clear');
+            }
+            else if (id === 801 || id === 802) {
+                setIcon(PartlyCloudy);
+                console.log('PartlyCloudy');
+            }
+            else if (id === 803 || id === 804) {
+                setIcon(MostlyCloudy);
+                console.log('Mostly cloudy');
+            }
+            else {
+                setIcon(Sunny);
+                console.log('Sunny');
+            }
         }
         catch (err) {
             console.error(err);
         }
         }
     
-    useEffect(() => getDetails(), [lat,long,unit,location, favIcon]);
+    useEffect(() => getDetails(), [lat, long, unit, location, favIcon]);
 
     const Icons = [
     {icon: TempIcon, text: 'Min - Max', value: `${city.main?.temp_min}⁰ - ${city.main?.temp_max}⁰` },
@@ -55,7 +87,7 @@ const Homepage = () => {
     {icon: WindIcon, text: 'Wind', value: `${city.wind?.speed} mph`},
     {icon: VisibilityIcon, text: 'Visibility', value: `${city.visibility} mph`}
     ];
-    
+
     const handleUnitChange = (e) => {
         document.getElementById(e.target.id).className = 'select';
         e.target.nextSibling === null ? e.target.previousSibling.className = 'unselect' : e.target.nextSibling.className = 'unselect';
@@ -78,18 +110,14 @@ const Homepage = () => {
         if (favIcon === Favourite) {
             setFav([...Fav, city.name]);
             setFavIcon(FavouriteActive);
-             //console.log(localStorage.getItem('Favourites'));
         }
         else {
             setLocalList(localList.filter((element) => element !== city.name));
-            //localStorage.setItem('Favourites', a);
-            //console.log(localStorage.getItem('Favourites'));
             setFav(Fav.filter((element) => element !== city.name));
             setFavIcon(Favourite);
         }
     }
 
-    //const arr1 = localStorage.getItem('Favourites')?.split(',');
     if (localList && localList[0] !== "") {
     const data = new Set([...new Set(localList), ...new Set(Fav)]);
      localStorage.setItem('Favourites', Array.from(data));
@@ -97,8 +125,8 @@ const Homepage = () => {
     else {
         localStorage.setItem('Favourites', Fav);
     }
-
-    console.log(localList);
+    console.log(icon);
+    console.log(location);
 
     return (
         <Wrapper>
@@ -114,7 +142,7 @@ const Homepage = () => {
                 <div className="location">{ city.name}</div>
                         <div className="favourite"><img src={localStorage.getItem('Favourites')?.split(',').includes(city.name) || Fav.includes(city.name) ? FavouriteActive : Favourite} className="favourite-icon" onClick={ handleFavourite}/><span className="add-to-favourite">Add to favourite</span></div>
                 <div className="weather-icon-container">
-                    <img src={MostlySunny} className="weather-icon" />
+                            <img src={icon} className="weather-icon" />
                     <div className="temperature">
                         <span className="temp">{city.main?.temp}</span>
                         <span className="select" id="celsius" onClick = {handleUnitChange}>⁰C</span>
