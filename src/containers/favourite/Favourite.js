@@ -1,17 +1,30 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Header from '../common/Header';
 import Table from '../common/Table';
+import { ApiKey } from '../../services/ApiKey';
 import Image from '../../assets/background.svg';
 import NothingIcon from '../../assets/icon_nothing.svg';
-import MostlySunny from '../../assets/icon_mostly_sunny.svg';
-import FavActive from '../../assets/icon_favourite_Active.svg';
-
-const FavouriteList = [
-    { location: 'Udupi, Karnataka', icon: MostlySunny, temp: '31', text: 'Mostly Sunny', favicon: FavActive },
-{location: 'Bangalore, Karnataka', icon: MostlySunny, temp: '29', text: 'Rain', favicon: FavActive}];
+import axios from 'axios';
 
 const Favourite = () => {
+    const FavouriteList = useRef([]);
+    //const [rerender, setRerender] = useState(false);
+    const [favList, setFavlist] = useState((localStorage.getItem('Favourites'))?.split(','));
+
+//     useEffect(()=>{
+//     setRerender(!rerender);
+// }, []);
+
+    if (favList) {
+        favList.map((fav, index) => {
+            const getItem = async () => {
+                const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${fav}&units=metric&appid=${ApiKey}`);
+                FavouriteList.current = [...FavouriteList.current, response.data];
+            }
+            getItem();
+        })
+    }
 
     const handleRemove = () => {
         document.getElementById('hide-list').className = 'remove-favourites';
@@ -20,8 +33,11 @@ const Favourite = () => {
     }
 
     const handleSelect = (e) => {
-        console.log(e.target.id);
         document.getElementById(e.target.id).className = 'click-res';
+        if (e.target.id === "YES") {
+            localStorage.removeItem('Favourites');
+            setFavlist([]);
+        }
         setTimeout(() => document.getElementById('hide-list').className = 'hidden', 1000);
     }
 
@@ -30,7 +46,7 @@ const Favourite = () => {
             <div className="container">
                 <Header />
                 {
-                    FavouriteList.length === 0 ?
+                    FavouriteList.current.length === 0 ?
                         <div className="no-favourites">
                             <img src={NothingIcon} className="icon-nothing"/>
                             <div className="no-favourites-msg">No Favourites added</div>
@@ -38,10 +54,10 @@ const Favourite = () => {
                         :
                         <div>
                         <div className= "first-row">
-                            <div className="list-length">{FavouriteList.length} City added as favourite</div>
+                            <div className="list-length">{FavouriteList.current.length} City added as favourite</div>
                             <div className="remove" onClick = {handleRemove }>Remove all</div>
                             </div>
-                            <Table list={ FavouriteList}/>
+                            <Table list={ FavouriteList.current}/>
                         </div>
                 }
                 <div className="hidden" id="hide-list">
@@ -61,6 +77,7 @@ background-image: url(${Image});
 height: 100vh;
 width: 100wh;
 background-size: cover;
+overflow:scroll;
 
 .container{
     margin-left: 120px;
