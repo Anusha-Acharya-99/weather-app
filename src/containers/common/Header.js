@@ -1,33 +1,47 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from '../../assets/logo_web.png';
 import Search from '../../assets/icon_search_white.svg';
+import moment from 'moment';
+import { useLocation, useHistory } from 'react-router';
 
 const Header = ({ handleChange }) => {
-    const handleSearch = (e) => {
-        handleChange(e.target.value);
+    let location = useLocation();
+    let history = useHistory();
+
+    const handleSearch = () => {
+        const search = document.getElementsByClassName('search-bar');
+        handleChange(search[0].value);
     }
+
+    useEffect(()=> {
+        let htmlNodes = document.getElementById(location.pathname);
+    if (htmlNodes){
+    htmlNodes.checked = true;
+    }
+    },[])
+    
 
     return (
             <Div>
                 <div className="header">
                     <img src={Logo} className="Logo" />
                     <div className="search-container">
-                    <input type="search" className="search-bar" placeholder="Search city" onChange={handleSearch}/>
-                        <img className="search-icon" src={Search} alt="search"></img>
+                    <input type="search" className="search-bar" placeholder="Search city"/>
+                        <img className="search-icon" src={Search} alt="search" onClick={handleSearch}></img>
                     </div>
                 </div>
                 <div className="topnavbar">
                     <ul className="navbar">
-                        <Link to = '/'><input type="radio" id="home" name="navlist" className="radio" />
+                        <Link to = '/'><input type="radio" id="/" name="navlist" className="radio" />
                         <label className="navlist" htmlFor="home">HOME</label></Link>
-                        <Link to='favourite'><input type="radio" id="favourite" name="navlist" className="radio"/>
+                        <Link to='favourite'><input type="radio" id="/favourite" name="navlist" className="radio"/>
                         <label className="navlist" htmlFor="favourite">FAVOURITE</label></Link>
-                        <Link to='recent-search'><input type="radio" id="recent-search" name="navlist" className="radio"/>
+                        <Link to='recent-search'><input type="radio" id="/recent-search" name="navlist" className="radio"/>
                         <label className="navlist" htmlFor="recent-search">RECENT SEARCH</label></Link>
                     </ul>
-                    <div className="date-time">Wed, 28 Nov 2018 11:35 AM</div>
+                    <div className="date-time">{moment().format('ddd, DD MMM YYYY LT')}</div>
                 </div>
                 </Div>
     )
@@ -111,7 +125,7 @@ input[type="search"]::-webkit-search-cancel-button {
 .date-time{
     height: 16px;
   color: #FFFFFF;
-  font-family: Roboto;
+  font-family: 'Roboto';
   font-size: 14px;
   letter-spacing: 0;
   line-height: 16px;
@@ -140,10 +154,11 @@ a{
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0;
-  line-height: 15px
+  line-height: 15px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #FFD639;
       }
   }
 `;
-
 
 export default Header;

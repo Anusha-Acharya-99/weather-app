@@ -1,14 +1,18 @@
-import React, { useRef } from 'react';
+import React from 'react';
+import { useLocation } from 'react-router';
 import styled from 'styled-components';
 import FavouriteActive from '../../assets/icon_favourite_Active.svg';
+import Favourite from '../../assets/icon_favourite.svg';
 import Sunny from '../../assets/icon_mostly_sunny.svg';
 import Rain from '../../assets/icon_rain_big.svg';
 import MostlyCloudy from '../../assets/icon_mostly_cloudy_big.svg';
 import PartlyCloudy from '../../assets/icon_partially_cloudy_big.svg';
 import Thunderstorm from '../../assets/icon_thunderstorm_big.svg';
 import Clear from '../../assets/icon_clear_night.svg';
+//import Favourite from '../favourite/Favourite';
 
 const Table = ({ list }) => {
+  let location = useLocation();
   
     return (
         <Wrapper>
@@ -47,7 +51,7 @@ const Table = ({ list }) => {
                         <span className="unit">⁰C</span>
                     </span>
                     <span className="fav-text">{fav.weather?.description}</span>
-                    <img src={FavouriteActive} className="fav-favicon" />
+                    <img src={localStorage.getItem('Favourites').split(',').includes(fav.name) ? FavouriteActive : Favourite} className="fav-favicon" />
                 </span>)
             })}
         </Wrapper>
