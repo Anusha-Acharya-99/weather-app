@@ -1,5 +1,4 @@
-import React, { useRef } from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import styled from "styled-components";
 import axios from "axios";
@@ -61,6 +60,7 @@ const Homepage = () => {
                 `http://api.openweathermap.org/data/2.5/weather?q=${location}&units=${unit}&appid=${ApiKey}`
               )
               .catch((err) => console.log(err));
+
       response === undefined ? setCity("error") : setCity(response.data);
       if (location !== "") setRec([...rec, response.data.name]);
       loc = response.data.name;
@@ -95,7 +95,14 @@ const Homepage = () => {
     },
     { icon: PrecipitationIcon, text: "Precipitation", value: "0%" },
     { icon: HumidityIcon, text: "Humidity", value: `${city.main?.humidity}` },
-    { icon: WindIcon, text: "Wind", value: `${city.wind?.speed} mph` },
+    {
+      icon: WindIcon,
+      text: "Wind",
+      value:
+        unit === "imperial"
+          ? `${city.wind?.speed} mph`
+          : `${(city.wind?.speed * 2.237).toFixed(2)} mph`,
+    },
     {
       icon: VisibilityIcon,
       text: "Visibility",
