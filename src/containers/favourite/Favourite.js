@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Header from "../common/Header";
 import Table from "../common/Table";
 import { ApiKey } from "../../services/ApiKey";
-import Image from "../../assets/background.svg";
 import NothingIcon from "../../assets/icon_nothing.svg";
 import axios from "axios";
 import { useHistory } from "react-router";
@@ -13,6 +12,7 @@ const Favourite = () => {
   const [favList, setFavlist] = useState(
     localStorage.getItem("Favourites")?.split(",")
   );
+  const [render, setRender] = useState(false);
   const history = useHistory();
 
   console.log(favList);
@@ -28,6 +28,7 @@ const Favourite = () => {
     });
     Promise.all(lists).then((res) => {
       FavouriteList.current = res;
+      setRender(true);
     });
   }
 
@@ -52,8 +53,7 @@ const Favourite = () => {
   };
 
   const handleChange = (value) => {
-    history.push({pathname : "/", state: {value : value}});
-    
+    history.push({ pathname: "/", state: { value: value } });
   };
 
   return (
@@ -66,7 +66,7 @@ const Favourite = () => {
             <div className="no-favourites-msg">No Favourites added</div>
           </div>
         ) : (
-          <div>
+          <div className="top">
             <div className="first-row">
               <div className="list-length">
                 {FavouriteList.current.length} City added as favourite
@@ -97,15 +97,14 @@ const Favourite = () => {
 };
 
 const Wrapper = styled.div`
-  background-image: url(${Image});
   height: 100vh;
   width: 100wh;
   background-size: cover;
   overflow: scroll;
 
   .container {
-    margin-left: 120px;
-    margin-right: 120px;
+    margin-left: 10%;
+    margin-right: 10%;
   }
 
   .no-favourites {
@@ -127,14 +126,14 @@ const Wrapper = styled.div`
   .first-row {
     display: flex;
     justify-content: space-between;
-    margin-top: 23px;
-    height: 15px;
+    margin-top: 2.3rem;
+    height: 1.5rem;
     color: #ffffff;
     font-family: Roboto;
-    font-size: 13px;
+    font-size: 1.3rem;
     font-weight: 500;
     letter-spacing: 0;
-    line-height: 15px;
+    line-height: 1.5rem;
   }
 
   .remove-favourites {
@@ -198,6 +197,16 @@ const Wrapper = styled.div`
 
   .hidden {
     display: none;
+  }
+
+  @media all and (max-width: 750px) {
+    .container {
+      margin-right: 5%;
+      margin-left: 5%;
+    }
+    .first-row {
+      margin-top: 7.2rem;
+    }
   }
 `;
 

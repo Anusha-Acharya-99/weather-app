@@ -4,9 +4,8 @@ import { useLocation } from "react-router";
 import styled from "styled-components";
 import axios from "axios";
 import { ApiKey } from "../../services/ApiKey";
-import Image from "../../assets/background.svg";
 import NothingIcon from "../../assets/icon_nothing.svg";
-import Favourite from "../../assets/icon_favourite.svg";
+import Favourite from "../../assets/icon_favourite.png";
 import FavouriteActive from "../../assets/icon_favourite_Active.svg";
 import TempIcon from "../../assets/icon_temperature_info.svg";
 import PrecipitationIcon from "../../assets/icon_precipitation_info.svg";
@@ -90,7 +89,9 @@ const Homepage = () => {
     {
       icon: TempIcon,
       text: "Min - Max",
-      value: `${city.main?.temp_min}⁰ - ${city.main?.temp_max}⁰`,
+      value: `${Math.floor(city.main?.temp_min)}⁰ - ${Math.floor(
+        city.main?.temp_max
+      )}⁰`,
     },
     { icon: PrecipitationIcon, text: "Precipitation", value: "0%" },
     { icon: HumidityIcon, text: "Humidity", value: `${city.main?.humidity}` },
@@ -220,14 +221,13 @@ const Homepage = () => {
 };
 
 const Wrapper = styled.div`
-  background-image: url(${Image});
   height: 100vh;
   width: 100wh;
   background-size: cover;
 
   .container {
-    margin-left: 120px;
-    margin-right: 120px;
+    margin-left: 10%;
+    margin-right: 10%;
   }
 
   .invalid-city {
@@ -337,6 +337,7 @@ const Wrapper = styled.div`
     letter-spacing: 0;
     line-height: 25px;
     text-align: center;
+    margin-bottom: 66px;
   }
 
   .icons-list {
@@ -345,18 +346,15 @@ const Wrapper = styled.div`
   }
 
   .flex-display {
+    bottom: 0px;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
     justify-content: space-between;
     margin-left: auto;
     margin-right: auto;
     padding-top: 35px;
-    margin-top: 66px;
-
     padding-left: 80px;
     padding-right: 80px;
-    width: 960px;
+    width: 80%;
     border-top: 1px solid rgba(255, 255, 255, 0.3);
   }
 
@@ -376,6 +374,7 @@ const Wrapper = styled.div`
     font-size: 15px;
     letter-spacing: 0;
     line-height: 18px;
+    white-space: nowrap;
   }
 
   .icon-value {
@@ -387,10 +386,46 @@ const Wrapper = styled.div`
     letter-spacing: 0;
     line-height: 25px;
     padding-top: 6px;
+    white-space: nowrap;
   }
 
   .icons-list {
     text-align: left;
+  }
+
+  @media all and (max-width: 960px) {
+    .flex-display {
+      background-color: #ffffff11;
+      border-top: 1px solid #ffffff55;
+      align-items: flex-start;
+      overflow-x: scroll;
+      margin-bottom: 0em;
+      height: 11rem;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      padding-right: 0;
+      padding-left: 0;
+      bottom: 0;
+    }
+
+    .inner-flex-display {
+      margin-right: 1.5rem;
+      margin-left: 1.5rem;
+    }
+  }
+
+  @media all and (max-width: 750px) {
+    .container {
+      margin-right: 5%;
+      margin-left: 5%;
+    }
+    .location {
+      text-align: center;
+    }
+    .favourite {
+      text-align: center;
+    }
   }
 `;
 

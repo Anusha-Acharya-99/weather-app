@@ -4,14 +4,16 @@ import { ApiKey } from "../../services/ApiKey";
 import styled from "styled-components";
 import Header from "../common/Header";
 import Table from "../common/Table";
-import Image from "../../assets/background.svg";
 import NothingIcon from "../../assets/icon_nothing.svg";
+import { useHistory } from "react-router-dom";
 
 const RecentSearch = () => {
   const recentList = useRef([]);
   const [recList, setReclist] = useState(
     localStorage.getItem("Recent")?.split(",")
   );
+  const [render, setRender] = useState(false);
+  const history = useHistory();
 
   if (recList) {
     const lists = recList.map((rec) => {
@@ -25,6 +27,7 @@ const RecentSearch = () => {
 
     Promise.all(lists).then((res) => {
       recentList.current = res;
+      setRender(true);
     });
   }
 
@@ -48,17 +51,22 @@ const RecentSearch = () => {
       1000
     );
   };
+
+  const handleChange = (value) => {
+    history.push({ pathname: "/", state: { value: value } });
+  };
+
   return (
     <Wrapper>
       <div className="container">
-        <Header />
+        <Header handleChange={handleChange} />
         {recentList.current.length === 0 ? (
           <div className="no-recent-search">
             <img src={NothingIcon} className="icon-nothing" />
             <div className="no-recent-search-msg">No Recent Search</div>
           </div>
         ) : (
-          <div>
+          <div className="top">
             <div className="first-row">
               <div className="list-length">You recently searched for</div>
               <div className="clear" onClick={handleRemove}>
@@ -87,15 +95,14 @@ const RecentSearch = () => {
 };
 
 const Wrapper = styled.div`
-  background-image: url(${Image});
   height: 100vh;
   width: 100wh;
   background-size: cover;
   overflow: scroll;
 
   .container {
-    margin-left: 120px;
-    margin-right: 120px;
+    margin-left: 10%;
+    margin-right: 10%;
   }
 
   .no-recent-search {
@@ -188,6 +195,16 @@ const Wrapper = styled.div`
 
   .hidden-list {
     display: none;
+  }
+
+  @media all and (max-width: 750px) {
+    .container {
+      margin-right: 5%;
+      margin-left: 5%;
+    }
+    .first-row {
+      margin-top: 7.2rem;
+    }
   }
 `;
 
